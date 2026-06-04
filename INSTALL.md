@@ -7,7 +7,7 @@ Do the following automatically. Ask the user nothing yet.**
    - `~/.claude/skills/cloudinary-ask-code/cloudinary-ask-code-setup/`
    - `~/.claude/skills/cloudinary-ask-code/ask-cloudinary-code/`
    - `~/.claude/skills/cloudinary-ask-code/assets/`
-2. Download each file from `<PUBLIC_RAW_BASE>/` into the matching path
+2. Download each file from `https://raw.githubusercontent.com/ryaron1976/cloudinary-ask-code/main/` into the matching path
    (use `curl -fsSL`):
    - `cloudinary-ask-code-setup/SKILL.md`
    - `ask-cloudinary-code/SKILL.md`
