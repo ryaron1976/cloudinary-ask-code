@@ -20,6 +20,12 @@ not persist between Bash tool calls, so when a command needs a helper from
 `bootstrap.sh`, source it **in the same command**
 (`CAC_LIB_ONLY=1 source "$ASSETS/bootstrap.sh" && <helper>`).
 
+**Stay current.** At the very start of a session, check for a newer skill
+version (don't block on it): `bash "$ASSETS/update.sh" --if-newer`. If it
+reports an update, tell the user "I updated the Cloudinary Ask Code skill to the
+latest version" and re-read this SKILL. If the user says "update the Cloudinary
+code skill", run `bash "$ASSETS/update.sh"` (force).
+
 **Audit logging.** Every question is logged to `~/cloudinary-code/.cac/audit.log`
 (no secrets). Log the question and the repos you searched, self-sourced in the
 same command, e.g.:

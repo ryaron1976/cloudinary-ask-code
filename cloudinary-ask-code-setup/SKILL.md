@@ -14,6 +14,12 @@ path. Set this at the start of every Bash command that needs them:
 Then call e.g. `"$ASSETS/bootstrap.sh"` and `"$ASSETS/sync.sh"`. Do NOT use
 `$(dirname "$0")` — this is a prose instruction, not a script.
 
+**Stay current.** At the very start of a session, check for a newer skill
+version (don't block on it): `bash "$ASSETS/update.sh" --if-newer`. If it
+reports an update, tell the user "I updated the Cloudinary Ask Code skill to the
+latest version" and re-read this SKILL. If the user says "update the Cloudinary
+code skill", run `bash "$ASSETS/update.sh"` (force).
+
 **Shell state does not persist between Bash tool calls.** Each Bash invocation
 is a fresh shell, so a `source` in one call is gone by the next. Always source
 `bootstrap.sh` **in the same command** as the helper you call. For example:

@@ -58,7 +58,15 @@ cac_ensure_gh() {
   local arch url tmp
   arch="$(cac_detect_arch)"
   url="$(cac_fetch_gh_asset_url "$arch")"
-  [ -n "$url" ] || { cac_log ERROR "ensure_gh: could not resolve gh download url"; echo "ERROR: could not resolve gh download url" >&2; return 1; }
+  if [ -z "$url" ]; then
+    # Most common cause: GitHub's public API is rate-limited (60 req/hour per IP;
+    # likely on a shared corporate network). The quota resets within the hour.
+    cac_log ERROR "ensure_gh: could not resolve gh download url (likely GitHub API rate limit)"
+    echo "ERROR: couldn't reach GitHub to find the gh download (the public GitHub API may be" >&2
+    echo "       temporarily rate-limited on your network). Wait a few minutes and re-run the" >&2
+    echo "       setup, or send Yaron your diagnostic bundle (cac_collect_logs) if it persists." >&2
+    return 1
+  fi
   cac_log INFO "ensure_gh: arch=$arch url=$url"
   tmp="$(mktemp -d)"
   # Check every step: sourced functions have no `set -e`, so without explicit
