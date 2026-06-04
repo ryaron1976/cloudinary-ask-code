@@ -5,6 +5,17 @@
 cac_clone_root() { echo "${CAC_CLONE_ROOT:-$HOME/cloudinary-code}"; }
 cac_sync_dir()  { echo "$(cac_clone_root)/.cac/sync"; }
 
+# --- audit logging -------------------------------------------------------
+# Duplicated from bootstrap.sh on purpose: each script is sourced independently
+# (same convention as cac_clone_root). Append-only, timestamped. No secrets.
+cac_log_dir()  { echo "$(cac_clone_root)/.cac"; }
+cac_log_file() { echo "$(cac_log_dir)/audit.log"; }
+
+cac_log() { # $1 = level (INFO|WARN|ERROR), $2 = message
+  local dir; dir="$(cac_log_dir)"; mkdir -p "$dir"
+  printf '%s [%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$1" "$2" >> "$dir/audit.log"
+}
+
 cac_mark_synced() { # $1 = repo dir name
   mkdir -p "$(cac_sync_dir)"
   date +%s > "$(cac_sync_dir)/$1"
@@ -20,13 +31,17 @@ cac_needs_sync() { # $1 = repo name, $2 = threshold seconds; returns 0 (true) if
 
 cac_sync_repo() { # $1 = repo name; ff-only, skip if dirty/diverged; records timestamp
   local dir; dir="$(cac_clone_root)/$1"
-  [ -d "$dir/.git" ] || { echo "  not cloned: $1" >&2; return 0; }
+  cac_log INFO "sync: $1 (start)"
+  [ -d "$dir/.git" ] || { cac_log INFO "sync: $1 (skip: not cloned)"; echo "  not cloned: $1" >&2; return 0; }
   if [ -n "$(git -C "$dir" status --porcelain)" ]; then
+    cac_log INFO "sync: $1 (skip: local changes)"
     echo "  skip (local changes): $1" >&2; return 0
   fi
   if git -C "$dir" pull --ff-only -q 2>/dev/null; then
     cac_mark_synced "$1"
+    cac_log INFO "sync: $1 (ok: synced)"
   else
+    cac_log WARN "sync: $1 (skip: cannot ff)"
     echo "  skip (cannot ff): $1" >&2
   fi
 }

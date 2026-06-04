@@ -20,7 +20,13 @@ not persist between Bash tool calls, so when a command needs a helper from
 `bootstrap.sh`, source it **in the same command**
 (`CAC_LIB_ONLY=1 source "$ASSETS/bootstrap.sh" && <helper>`).
 
+**Audit logging.** Every question is logged to `~/cloudinary-code/.cac/audit.log`
+(no secrets). Log the question and the repos you searched, self-sourced in the
+same command, e.g.:
+`CAC_LIB_ONLY=1 source "$ASSETS/bootstrap.sh" && cac_log INFO "ask: how does signup verification work | repos: idp,console"`
+
 ## On each question
+0. **Log the question** (see Audit logging above) before doing anything else.
 1. **Freshness (pull-on-use + staleness guard).** Before answering, refresh only
    the repos relevant to the question, and only if stale:
    `bash "$ASSETS/sync.sh" --if-stale <repo1> <repo2>`
@@ -36,3 +42,11 @@ not persist between Bash tool calls, so when a command needs a helper from
 4. If the answer spans repos they haven't cloned, offer to clone the extra repo
    (self-sourced in the same command):
    `CAC_LIB_ONLY=1 source "$ASSETS/bootstrap.sh" && cac_clone_repo <owner/name> <name>`.
+
+## If anything fails
+If a sync, clone, or any other step fails, create the diagnostic bundle and have
+the user send it to Yaron:
+`CAC_LIB_ONLY=1 source "$ASSETS/bootstrap.sh" && cac_collect_logs`
+This prints a file path (on their Desktop, or in `~/cloudinary-code` if the
+Desktop isn't available). Tell them in plain language to drag that file into
+their Slack DM with Yaron so he can debug it.
