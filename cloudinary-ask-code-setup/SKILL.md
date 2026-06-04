@@ -46,19 +46,28 @@ Before Stage 1, confirm the environment:
 
 ## Stage 1 — GitHub account (stage marker: 1)
 Cloudinary requires a **dedicated** GitHub account (not a personal one), named
-`FirstInitialLastName-cloudinary` (e.g. `jdoe-cloudinary`), registered with the
-Cloudinary email, with 2FA on.
+`FirstInitialLastName-cloudinary`, all lowercase (IT's example: `jdoe-cloudinary`
+for "John Doe"), registered with the Cloudinary email, with 2FA on.
 - Ask the colleague (one question): "Do you already have a Cloudinary GitHub
   account (username ending in `-cloudinary`)?"
-- If no: walk them to https://github.com/signup — tell them the exact username
-  to use and to enable 2FA. Wait for them to confirm the username, then continue.
+- If no: **compute the exact username for them and state it literally** — don't
+  leave the naming rule for them to interpret. Take their first name's first
+  letter + their last name + `-cloudinary`, lowercased. (E.g. "Merav Amir-Cohen"
+  → `mamir-cohen-cloudinary`; "Yaron Reichert" → `yreichert-cloudinary`.) If their
+  name makes this ambiguous, propose one specific string and let them confirm.
+  Then walk them to https://github.com/signup, tell them to register with their
+  Cloudinary email and enable 2FA. Wait for them to confirm the final username
+  (it may differ if their first choice was taken), then continue.
 - Record: `cac_set_stage 1`.
 
 ## Stage 2 — Okta access (stage marker: 2) — ONLY human-gated step
 - Tell them: in Okta, open their profile and put the new GitHub username in the
   "GitHub Username" field, then save. Within ~5–10 min Okta emails an org invite
-  and a GitHub-org app appears in Okta; they should log in to the org **through
-  Okta** (do NOT press GitHub's "Join").
+  and a GitHub-org app appears in Okta.
+- **Emphasize this clearly — it's the #1 thing people get wrong:** they must log
+  in to the org **through the Okta app**. They must NOT click "Join" on any email
+  invite or GitHub page. Joining outside Okta makes GitHub treat them as an
+  outside collaborator and the access won't work. State this in plain words.
 - Ask (one question): "Do you now see a Cloudinary GitHub organization app in
   your Okta dashboard?"
 - If **no after waiting**: this is the only step we cannot automate — tell them

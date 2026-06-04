@@ -50,6 +50,9 @@ cac_ensure_local_bin_on_path() {
 cac_ensure_gh() {
   cac_ensure_local_bin_on_path
   if [ "${CAC_FORCE_INSTALL_GH:-0}" != "1" ] && command -v gh >/dev/null 2>&1; then
+    # Already on PATH (e.g. Homebrew). Skip install, but record WHY so the audit
+    # log explains an otherwise-empty ~/.local/bin if someone debugs later.
+    cac_log INFO "ensure_gh: gh already present at $(command -v gh) — skipping install"
     return 0
   fi
   local arch url tmp
